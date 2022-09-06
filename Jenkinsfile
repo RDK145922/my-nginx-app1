@@ -29,7 +29,20 @@ pipeline {
                     }
                 }
             }
+        stage('Deploy to Production') {
+            when {
+                branch 'master'
+            }
+            steps {
+                echo 'Deploying release to production'
+                script {
+                    productionImage.push("deploy")
+                    sh """
+                       aws ec2 reboot-instances --region us-east-1 --instance-ids i-0a6ff51129f6af6e8
+                    """
+            }
         }
+    }
     
 }
 
